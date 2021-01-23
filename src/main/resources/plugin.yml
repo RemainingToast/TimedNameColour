@@ -1,0 +1,12 @@
+name: TimedNameColour
+version: ${project.version}
+main: me.remainingtoast.namecolour.NameColourMain
+api-version: 1.16
+authors: [ RemainingToast ]
+commands:
+  namecolour:
+    description: Change namecolour
+    aliases: ["nc", "namecolor"]
+  namecolourcheck:
+    aliases: ["ncc", "namecolorcheck"]
+    description: Check amount namecolour left
