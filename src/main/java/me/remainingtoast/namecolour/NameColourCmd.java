@@ -100,32 +100,38 @@ public class NameColourCmd implements CommandExecutor {
 
     private void addTime(String[] args, CommandSender sender) {
         if (args.length == 4) {
-            Player player = sender.getServer().getPlayer(args[1]);
-            if (player.hasPermission("namecolour.admin")) {
-                int time = 0;
-                String str = args[3].toLowerCase();
-                switch(str) {
-                    case "hours":
-                        time = Integer.parseInt(args[2]) * 3600;
-                        break;
-                    case "minutes":
-                        time = Integer.parseInt(args[2]) * 60;
-                        break;
-                    case "seconds":
-                        time = Integer.parseInt(args[2]);
-                        break;
-                }
-                NCPlayer ncp = PlayerUtil.loadPlayerData(player);
-                int i = ncp.getNameColourTime();
-                ncp.setNameColourTime(i + time);
-                ncp.save();
-                player.sendMessage((ChatColor.translateAlternateColorCodes('&',"&aSuccessfully added.")));
+            int time;
+            NCPlayer ncp;
+            if(sender instanceof Player){
+                if(!sender.isOp()) return;
+                ncp = PlayerUtil.loadPlayerData((Player) sender);
             } else {
-                player.sendMessage((ChatColor.translateAlternateColorCodes('&',"&cHa! You thought...")));
+                ncp = PlayerUtil.loadPlayerData(sender.getServer().getPlayer(args[1]));
             }
+            time = parseTime(args[3], args[2]);
+            int currTime = ncp.getNameColourTime();
+            ncp.setNameColourTime(currTime + time);
+            ncp.save();
+            sender.sendMessage((ChatColor.translateAlternateColorCodes('&',"&aSuccessfully added.")));
         } else {
             sender.sendMessage((ChatColor.translateAlternateColorCodes('&',"&cInvalid arguments, type /nc help.")));
         }
+    }
+
+    private int parseTime(String str, String t) {
+        int time = 0;
+        switch (str) {
+            case "hours":
+                time = Integer.parseInt(t) * 3600;
+                break;
+            case "minutes":
+                time = Integer.parseInt(t) * 60;
+                break;
+            case "seconds":
+                time = Integer.parseInt(t);
+                break;
+        }
+        return time;
     }
 
     private void setColour(Player player, String color){
