@@ -1,15 +1,13 @@
 package me.remainingtoast.namecolour;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.time.LocalTime;
-
 public class NameColourCmd implements CommandExecutor {
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if(sender instanceof Player){
@@ -18,69 +16,69 @@ public class NameColourCmd implements CommandExecutor {
                 String str = args[0].toLowerCase();
                 switch (str){
                     case "darkred": {
-                        setColour(p, "4");
+                        setColour(p, "&4");
                         break;
                     }
                     case "red": {
-                        setColour(p, "c");
+                        setColour(p, "&c");
                         break;
                     }
                     case "gold": {
-                        setColour(p, "6");
+                        setColour(p, "&6");
                         break;
                     }
                     case "yellow": {
-                        setColour(p, "e");
+                        setColour(p, "&e");
                         break;
                     }
                     case "darkgreen": {
-                        setColour(p, "2");
+                        setColour(p, "&2");
                         break;
                     }
                     case "green": {
-                        setColour(p, "a");
+                        setColour(p, "&a");
                         break;
                     }
                     case "aqua": {
-                        setColour(p, "b");
+                        setColour(p, "&b");
                         break;
                     }
                     case "darkaqua": {
-                        setColour(p, "3");
+                        setColour(p, "&3");
                     }
                     case "darkblue": {
-                        setColour(p, "1");
+                        setColour(p, "&1");
                     }
                     case "blue": {
-                        setColour(p, "9");
+                        setColour(p, "&9");
                         break;
                     }
                     case "lightpurple": {
-                        setColour(p, "d");
+                        setColour(p, "&d");
                         break;
                     }
                     case "darkpurple": {
-                        setColour(p, "5");
+                        setColour(p, "&5");
                         break;
                     }
                     case "white": {
-                        setColour(p, "f");
+                        setColour(p, "&f");
                         break;
                     }
                     case "gray": {
-                        setColour(p, "7");
+                        setColour(p, "&7");
                         break;
                     }
                     case "darkgray": {
-                        setColour(p, "8");
+                        setColour(p, "&8");
                         break;
                     }
                     case "black": {
-                        setColour(p, "0");
+                        setColour(p, "&0");
                         break;
                     }
                     case "add": {
-                        addTime(args, sender);
+                        addTime(args, p);
                         break;
                     }
                     default: {
@@ -94,7 +92,7 @@ public class NameColourCmd implements CommandExecutor {
         return false;
     }
 
-    private void addTime(String[] args, CommandSender player) {
+    private void addTime(String[] args, Player player) {
         if (args.length == 4) {
             if (player.hasPermission("namecolour.admin")) {
                 int time = 0;
@@ -110,7 +108,10 @@ public class NameColourCmd implements CommandExecutor {
                         time = Integer.parseInt(args[2]);
                         break;
                 }
-                addTime(Bukkit.getPlayer(args[1]), time);
+                NCPlayer ncp = PlayerUtil.loadPlayerData(player);
+                int i = ncp.getNameColourTime();
+                ncp.setNameColourTime(i + time);
+                ncp.save();
                 player.sendMessage((ChatColor.translateAlternateColorCodes('&',"&aSuccessfully added.")));
             } else {
                 player.sendMessage((ChatColor.translateAlternateColorCodes('&',"&cHa! You thought...")));
@@ -120,21 +121,20 @@ public class NameColourCmd implements CommandExecutor {
         }
     }
 
-    private void setColour(Player player, String colorCode){
+    private void setColour(Player player, String color){
         try {
-            NameColourMain.INSTANCE.getPlayerSection(player).set("colour", "&" + colorCode);
-            player.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&"+colorCode+player.getDisplayName()));
-            player.setPlayerListName(ChatColor.translateAlternateColorCodes('&', "&"+colorCode+player.getPlayerListName()));
-            NameColourMain.INSTANCE.savePlayerData();
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&"+colorCode+"Your name colour was set successfully!"));
+            NCPlayer ncp = PlayerUtil.loadPlayerData(player);
+            boolean boo = ncp.getNameColourTime() == 0;
+            ncp.setColour(color);
+            if(!(boo)){
+                player.setDisplayName(ncp.getColoredName());
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', color+"Your name colour was successfully set!"));
+            } else {
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6Your " + color +  "NameColour &6was successfully set, &cBUT you have no NameColour Time do /vote"));
+            }
+            ncp.save();
         } catch (Exception e){
-            System.out.println("Error trying to set " + player.getDisplayName() + "'s name to the colorCode: &" + colorCode);
+            System.out.println("Error trying to set " + player.getDisplayName() + "'s name to the color: " + color);
         }
-    }
-
-    private void addTime(Player player, Integer time){
-        int curr = NameColourMain.INSTANCE.getPlayerSection(player).getInt("time");
-        NameColourMain.INSTANCE.getPlayerSection(player).set("time", curr + time);
-        NameColourMain.INSTANCE.savePlayerData();
     }
 }

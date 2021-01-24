@@ -21,7 +21,8 @@ public class NameColourCheckCmd implements CommandExecutor {
     }
 
     public int getTime(Player player) {
-        return NameColourMain.INSTANCE.getPlayerSection(player).getInt("time");
+        NCPlayer p = PlayerUtil.loadPlayerData(player);
+        return p.getNameColourTime();
     }
 
     public String getTimeFormatted(Player player) {
