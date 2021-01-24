@@ -88,12 +88,19 @@ public class NameColourCmd implements CommandExecutor {
             } else {
                 p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cInvalid colour, Available colours: &4darkred &cred &6gold &eyellow &2darkgreen &agreen &baqua &3darkaqua &1darkblue &9blue &dlightpurple &5darkpurple &fwhite &7gray &8darkgray &0black"));
             }
+        } else {
+            if(args.length > 0){
+                if(args[0].equalsIgnoreCase("add")){
+                    addTime(args, sender);
+                }
+            }
         }
         return false;
     }
 
-    private void addTime(String[] args, Player player) {
+    private void addTime(String[] args, CommandSender sender) {
         if (args.length == 4) {
+            Player player = sender.getServer().getPlayer(args[1]);
             if (player.hasPermission("namecolour.admin")) {
                 int time = 0;
                 String str = args[3].toLowerCase();
@@ -117,7 +124,7 @@ public class NameColourCmd implements CommandExecutor {
                 player.sendMessage((ChatColor.translateAlternateColorCodes('&',"&cHa! You thought...")));
             }
         } else {
-            player.sendMessage((ChatColor.translateAlternateColorCodes('&',"&cInvalid arguments, type /nc help.")));
+            sender.sendMessage((ChatColor.translateAlternateColorCodes('&',"&cInvalid arguments, type /nc help.")));
         }
     }
 

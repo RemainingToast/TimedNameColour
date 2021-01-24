@@ -1,6 +1,5 @@
 package me.remainingtoast.namecolour;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import org.bukkit.ChatColor;
