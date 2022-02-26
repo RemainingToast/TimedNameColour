@@ -1,6 +1,6 @@
 name: TimedNameColour
 version: ${project.version}
-main: me.remainingtoast.namecolour.NameColourMain
+main: me.remainingtoast.namecolour.Main
 api-version: 1.16
 authors: [ RemainingToast ]
 commands:
@@ -10,3 +10,10 @@ commands:
   namecolourcheck:
     aliases: ["ncc", "namecolorcheck"]
     description: Check amount namecolour left
+  togglenamecolour:
+    aliases: ["togglenamecolor"]
+    description: Hide other players namecolour
+  addnamecolour:
+    aliases: ["addnamecolor"]
+    description: Add hours to players namecolour
+    permission: namecolour.add
